@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | {{ site_name }}</title>
+    <meta name="description" content="{{ description }}">
+    <link rel="stylesheet" href="{{ root_path }}/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="{{ root_path }}/index.html" class="logo">~/{{ user_name }}</a>
+            <div class="nav-links">
+                <a href="{{ root_path }}/index.html" class="{{ active_home }}">Home</a>
+                <a href="{{ root_path }}/writeups/index.html" class="{{ active_writeups }}">Writeups</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {{ content }}
+    </main>
+
+    <footer>
+        <p>&copy; {{ year }} {{ user_name }}. Built with 🤍.</p>
+    </footer>
+</body>
+
+</html>
