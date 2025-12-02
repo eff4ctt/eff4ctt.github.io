@@ -1,7 +1,7 @@
 ---
-title: My First CTF Writeup
+title: Example Writeup
 date: 2023-10-27
-description: A walkthrough of a basic buffer overflow challenge.
+description: This is an example of how a writeup looks on the blog.
 ---
 
 # Introduction
