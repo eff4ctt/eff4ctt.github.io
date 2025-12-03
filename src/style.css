@@ -29,13 +29,51 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2L11 20L14 13L21 10L2 2Z" fill="%2300ff41" stroke="%230a0a0a" stroke-width="2"/></svg>'), auto;
+    /* New Glowing Cursor - Smaller & Upright */
+    cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M2 2 L5 19.9 L8.9 13.9 L16 13.5 Z" fill="%2300ff41" stroke="%2300ff41" stroke-width="1" filter="url(%23glow)"/><path d="M2 2 L5 19.9 L8.9 13.9 L16 13.5 Z" fill="black" stroke="none"/></svg>') 2 2, auto;
 }
 
 a,
 button,
 .writeup-card {
-    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2L11 20L14 13L21 10L2 2Z" fill="%23ffffff" stroke="%230a0a0a" stroke-width="2"/></svg>'), pointer;
+    /* Pointer Glowing Cursor - Smaller & Upright */
+    cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M2 2 L5 19.9 L8.9 13.9 L16 13.5 Z" fill="%23ffffff" stroke="%23ffffff" stroke-width="1" filter="url(%23glow)"/><path d="M2 2 L5 19.9 L8.9 13.9 L16 13.5 Z" fill="black" stroke="none"/></svg>') 2 2, pointer;
+}
+
+/* Default Cursor Override */
+body.default-cursor,
+body.default-cursor a,
+body.default-cursor button,
+body.default-cursor .writeup-card {
+    cursor: auto !important;
+}
+
+body.default-cursor a,
+body.default-cursor button,
+body.default-cursor .writeup-card {
+    cursor: pointer !important;
+}
+
+/* Cursor Toggle Button */
+#cursor-toggle {
+    background: none;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    margin-left: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#cursor-toggle:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 10px var(--accent-color);
 }
 
 /* Header */
@@ -222,7 +260,8 @@ main {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 2rem;
+    padding: 0;
+    /* Removed padding from here */
     margin-bottom: 2.5rem;
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
@@ -237,6 +276,8 @@ main {
     text-decoration: none;
     color: inherit;
     display: block;
+    padding: 2rem;
+    /* Added padding here */
 }
 
 .writeup-card h2 {
@@ -333,6 +374,27 @@ main {
     color: #e0e0e0;
     background: none;
     padding: 0;
+}
+
+.copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--secondary-color);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-mono);
+}
+
+.copy-button:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border-color: var(--accent-color);
 }
 
 .content blockquote {

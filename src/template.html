@@ -27,7 +27,7 @@
             <div class="nav-links">
                 <a href="{{ root_path }}/index.html" class="{{ active_home }}">Home</a>
                 <a href="{{ root_path }}/writeups/index.html" class="{{ active_writeups }}">Writeups</a>
-
+                <button id="cursor-toggle">Cursor: Custom</button>
             </div>
         </nav>
     </header>
@@ -41,6 +41,51 @@
     </footer>
 
 
+    <script>
+        const cursorToggle = document.getElementById('cursor-toggle');
+        const body = document.body;
+
+        // Check local storage
+        if (localStorage.getItem('cursorPreference') === 'default') {
+            body.classList.add('default-cursor');
+            cursorToggle.textContent = 'Cursor: Default';
+        }
+
+        cursorToggle.addEventListener('click', () => {
+            body.classList.toggle('default-cursor');
+            if (body.classList.contains('default-cursor')) {
+                localStorage.setItem('cursorPreference', 'default');
+                cursorToggle.textContent = 'Cursor: Default';
+            } else {
+                localStorage.setItem('cursorPreference', 'custom');
+                cursorToggle.textContent = 'Cursor: Custom';
+            }
+        });
+
+        // Copy Code Functionality
+        document.querySelectorAll('.content pre').forEach(pre => {
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.textContent = 'Copy';
+
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                if (code) {
+                    navigator.clipboard.writeText(code.innerText).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.textContent = 'Copy';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                        button.textContent = 'Error';
+                    });
+                }
+            });
+
+            pre.appendChild(button);
+        });
+    </script>
 </body>
 
 </html>
