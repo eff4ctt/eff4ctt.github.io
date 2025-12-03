@@ -11,6 +11,33 @@
     --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
 }
 
+[data-theme="light"] {
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-color: #1a1a1a;
+    --accent-color: #009926;
+    --accent-hover: #00771d;
+    --secondary-color: #555;
+    --border-color: #ddd;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    color: var(--accent-color);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -88,10 +115,16 @@ nav {
     }
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
 .nav-links a {
     color: var(--text-color);
     text-decoration: none;
-    margin-left: 1.5rem;
+    text-decoration: none;
     font-size: 0.95rem;
     transition: color 0.2s ease;
 }

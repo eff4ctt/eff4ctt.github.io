@@ -4,14 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>effect - blog</title>
+    <title>Effect Blog</title>
     <meta name="description" content="Writeup du challenge pwn103 (Ret2Win) avec contournement de stack alignment.">
+    <link rel="icon" type="image/jpeg" href="../assets/profile.jpg">
     <link rel="stylesheet" href="../style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </head>
 
 <body>
@@ -21,6 +26,26 @@
             <div class="nav-links">
                 <a href="../index.html" class="">Home</a>
                 <a href="../writeups/index.html" class="active">Writeups</a>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" style="display: none;">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
             </div>
         </nav>
     </header>
@@ -29,14 +54,12 @@
         <div class='content'><h1>Challenge 3 - pwn101</h1><p class='writeup-meta'>2023-12-03</p><h1>Information du fichier</h1>
 <p>Dans un premier temps on a besoin d'avoir un max d'information sur le fichier pour savoir à quoi nous avons à faire on va donc effectuer un `file` pour obtenir des informations sur le fichier. Ensuite nous ferons un `checksec` pour voir les protections avec lesquelles le fichier à été compilé.</p>
 <p>Le `file`</p>
-<pre><code>bash
-❯ file pwn103
+<pre><code class="language-bash">❯ file pwn103
 pwn103: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3df2200610f5e40aa42eadb73597910054cf4c9f, for GNU/Linux 3.2.0, not stripped
 </code></pre>
 <p>On retient ici le fait que le fichier est un executable en 64bit, et qu'il n'est pas strippé.</p>
 <p>Le `checksec`</p>
-<pre><code>py
-❯ checksec pwn103
+<pre><code class="language-py">❯ checksec pwn103
 Arch:       amd64-64-little
     RELRO:      Partial RELRO
     Stack:      No canary found
@@ -54,8 +77,7 @@ Arch:       amd64-64-little
 <p>On se doute que la vuln se situe ici car on a un input et un input trop long fait crash le programme. On peut donc supposer une vuln de type buffer overflow.</p>
 <h2>Création du payload</h2>
 <p>Voici donc le début de notre exploit, pour ça je vais utiliser `pwninit` un outil de création de template python :</p>
-<pre><code>py
-from pwn import *
+<pre><code class="language-py">from pwn import *
 
 exe = ELF("./pwn103")
 
@@ -93,8 +115,7 @@ if __name__ == "__main__":
 <p>On envoie le payload mais rien ne va se passer car la sauvegarde de RIP n'a pas été overwrite.</p>
 <h1>Continuation du Payload</h1>
 <p>Je vais donc essayer d'éxécuter la fonction "announcements" pour vérifier que l'on peut effectuer un buffer overflow en écrasant l'adresse de retour.</p>
-<pre><code>py
-from pwn import *
+<pre><code class="language-py">from pwn import *
 
 exe = ELF("./pwn103")
 
@@ -133,8 +154,7 @@ if __name__ == "__main__":
 <img src="../assets/disass.png" alt="disass" style="max-width:100%;">
 <p>Sur ghidra on voit dans le code décompiler que la fonction `admins_only` a 3 CALL dont deux sur `puts` et un sur `system("/bin/sh");`.</p>
 <p>On modifie notre payload pour éxécuter cette fonction et le testons toujours en LOCAL :</p>
-<pre><code>py
-from pwn import *
+<pre><code class="language-py">from pwn import *
 
 exe = ELF("./pwn103")
 
@@ -165,7 +185,7 @@ if __name__ == "__main__":
     main()
 </code></pre>
 <p>On run et on devrait obtenir un shell :</p>
-<img src="../assets/test_payload.md" alt="test_payload" style="max-width:100%;">
+<img src="../assets/test_payload.png" alt="test_payload" style="max-width:100%;">
 <p>Et... non c'est Jason, le shell n’a pas été obtenu car le programme a segfault.</p>
 <h2>Le problème </h2>
 <p>Puisque je suis sous Ubuntu 22.04, qui est une version ultérieure à la 18.04 je suis affecté par les problèmes de stack alignment. Nous devons donc la réaligner</p>
@@ -174,8 +194,7 @@ if __name__ == "__main__":
 <p>Sinon, certaines instructions comme movaps plantent avec un segfault, car elles attendent une adresse bien alignée.</p>
 <p>Le shell ne s'ouvre pas à cause de ça.</p>
 <p>En insérant un gadget ret juste avant d’appeler une vraie fonction, tu déplaces la stack de 8 octets et tu réalignes tout</p>
-<pre><code>bash
-ROPgadget --binary pwn103 | grep ": ret"
+<pre><code class="language-bash">ROPgadget --binary pwn103 | grep ": ret"
 
 0x0000000000401016 : ret
 0x0000000000401072 : ret 0x3f
@@ -185,8 +204,7 @@ ROPgadget --binary pwn103 | grep ": ret"
 <p>`ret` ne fait qu’un seul pop (la prochaine adresse de retour) et saute là‑dessus</p>
 <h1>Payload Final</h1>
 <p>Maintenant qu’on a l’addresse du `ret` on peut l’ajouter à notre payload, et il devrait fonctionner cette fois. Voici donc la version finale de l’exploit en REMOTE après avoir tester que ça marcher en LOCAL :</p>
-<pre><code>py
-from pwn import *
+<pre><code class="language-py">from pwn import *
 
 exe = ELF("./pwn103")
 
@@ -226,6 +244,53 @@ if __name__ == "__main__":
     <footer>
         <p>&copy; 2025 effect. Built with 🤍.</p>
     </footer>
+
+    <script>
+        const toggleButton = document.getElementById('theme-toggle');
+        const sunIcon = document.querySelector('.sun-icon');
+        const moonIcon = document.querySelector('.moon-icon');
+        const body = document.body;
+
+        // Check for saved user preference
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            body.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'light') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        } else {
+            // Default to dark
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+
+        // Update icons based on current theme state (fix for initial load)
+        if (body.getAttribute('data-theme') === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+
+        toggleButton.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 
 </html>

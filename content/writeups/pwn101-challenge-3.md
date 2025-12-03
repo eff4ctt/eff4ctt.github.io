@@ -178,7 +178,7 @@ if __name__ == "__main__":
 
 On run et on devrait obtenir un shell :
 
-![test_payload](../assets/test_payload.md)
+![test_payload](../assets/test_payload.png)
 
 Et... non c'est Jason, le shell n’a pas été obtenu car le programme a segfault.
 
