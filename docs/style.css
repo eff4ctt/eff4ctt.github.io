@@ -171,10 +171,10 @@ main {
 
 /* Social Links */
 .social-links {
-    margin-top: 3rem;
+    margin-top: 5rem;
     display: flex;
     justify-content: center;
-    gap: 2.5rem;
+    gap: 3.5rem;
 }
 
 .social-links a {
