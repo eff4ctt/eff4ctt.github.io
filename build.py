@@ -46,6 +46,9 @@ def parse_markdown(text):
     # Italic
     html = re.sub(r'\*(.*?)\*', r'<em>\1</em>', html)
 
+    # Images ![alt](url)
+    html = re.sub(r'!\[(.*?)\]\((.*?)\)', r'<img src="\2" alt="\1" style="max-width:100%;">', html)
+
     # Links [text](url)
     html = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', html)
 
@@ -133,7 +136,7 @@ def build():
         <img src="assets/profile.jpg" alt="Profile Picture" class="profile-img">
         <h1>Hello, I'm Effect</h1>
         <div class="subtitle">Cybersecurity Student</div>
-        <p>Welcome to my digital garden. Here I share my journey, writeups, and research in the world of cybersecurity.</p>
+        <p>Welcome to my digital garden. Here I share my writeups and research in the world of cybersecurity.</p>
         <div class="social-links">
             <a href="https://github.com/eff4ctt" target="_blank" title="GitHub">
                 <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/github.svg" alt="GitHub">

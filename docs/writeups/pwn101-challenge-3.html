@@ -47,10 +47,10 @@ Arch:       amd64-64-little
 <p>Les protections à retenir ici, PIE (Position Independant Executable) nous permet de connaître l'adresse de base du binaire et donc de connaître les adresses des fonctions.</p>
 <h2>Exploit - (ret2win)</h2>
 <p>Nous allons donc d'abord executer le fichier et voir comment il réagit :</p>
-<p>!<a href="../assets/menu.png">menu</a></p>
+<img src="../assets/menu.png" alt="menu" style="max-width:100%;">
 <p>Nous apprenons plusieurs choses en lisant le programme qu'il a 5 sections nous avons donc un premier input dans lequel il nous est demandé d'interagir avec le menu .</p>
 <p>Je teste les différents possibilité et en tapant 3 j'accède au général :</p>
-<p>!<a href="../assets/crash.png">general</a></p>
+<img src="../assets/crash.png" alt="general" style="max-width:100%;">
 <p>On se doute que la vuln se situe ici car on a un input et un input trop long fait crash le programme. On peut donc supposer une vuln de type buffer overflow.</p>
 <h2>Création du payload</h2>
 <p>Voici donc le début de notre exploit, pour ça je vais utiliser `pwninit` un outil de création de template python :</p>
@@ -128,9 +128,9 @@ if __name__ == "__main__":
 </code></pre>
 <p>J'ai rajouté dans le payload `p64(exe.sym["announcements])`, il va récupérer l'adresse du symbol "announcements" et la fonction p64() va convertir l'adresse en 64 bits little endian.</p>
 <p>Je vois que j'ai réussi à éxecuter la fonction annoucements , le contenu s'affiche cela confirme que le payload écrase l'adresse de retour.</p>
-<p>!<a href="../assets/announcements.png">announcements</a></p>
+<img src="../assets/announcements.png" alt="announcements" style="max-width:100%;">
 <p>Il nous faut maintenant trouver la fonction "win" (qui va nous afficher le flag) et sauter dessus.</p>
-<p>!<a href="../assets/disass.png">disass</a></p>
+<img src="../assets/disass.png" alt="disass" style="max-width:100%;">
 <p>Sur ghidra on voit dans le code décompiler que la fonction `admins_only` a 3 CALL dont deux sur `puts` et un sur `system("/bin/sh");`.</p>
 <p>On modifie notre payload pour éxécuter cette fonction et le testons toujours en LOCAL :</p>
 <pre><code>py
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     main()
 </code></pre>
 <p>On run et on devrait obtenir un shell :</p>
-<p>!<a href="../assets/test_payload.md">test_payload</a></p>
+<img src="../assets/test_payload.md" alt="test_payload" style="max-width:100%;">
 <p>Et... non c'est Jason, le shell n’a pas été obtenu car le programme a segfault.</p>
 <h2>Le problème </h2>
 <p>Puisque je suis sous Ubuntu 22.04, qui est une version ultérieure à la 18.04 je suis affecté par les problèmes de stack alignment. Nous devons donc la réaligner</p>
@@ -219,7 +219,7 @@ def main():
 if __name__ == "__main__":
     main()
 </code></pre>
-<p>!<a href="../assets/final.png">final</a></p>
+<img src="../assets/final.png" alt="final" style="max-width:100%;">
 <p><strong>Et c'est flag, bien joué !</strong></p></div>
     </main>
 
